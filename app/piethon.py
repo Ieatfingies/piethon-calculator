@@ -107,7 +107,8 @@ class SophisticatedPieCalc(wx.Frame):
         self.main_layout.Add(self.history_panel, 0, wx.EXPAND)
         self.SetSizer(self.main_layout); self.Centre()
         
-        self.horse_popup = AnimalPopUp(self, "horse.png")
+        horse_img_path = os.path.join("..", "peripherals", "horse.png")
+        self.horse_popup = AnimalPopUp(self, horse_img_path)
 
     def setup_buttons_ui(self):
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -174,12 +175,15 @@ class SophisticatedPieCalc(wx.Frame):
             self.history_list.Insert(f"{raw} = {res:.4f}", 0)
             self.draw_pies(res, is_67)
             if is_67:
-                CinematicOverlay(self, "KYS.gif", "audio.mp3").Show()
+                gif_p = os.path.join("..", "peripherals", "KYS.gif")
+                aud_p = os.path.join("..", "peripherals", "audio.mp3")
+                CinematicOverlay(self, gif_p, aud_p).Show()
         self.input_ctrl.Clear()
 
     def draw_pies(self, val, is_67):
         self.pie_grid.Clear(True)
-        img_path = "KYS.png" if is_67 else "pie.png"
+        img_name = "KYS.png" if is_67 else "pie.png"
+        img_path = os.path.join("..", "peripherals", img_name)
         if os.path.exists(img_path):
             full_img = Image.open(img_path).convert("RGBA")
             integer_part = int(abs(val))
