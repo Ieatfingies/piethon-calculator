@@ -182,22 +182,27 @@ class SophisticatedPieCalc(wx.Frame):
 
     def draw_pies(self, val, is_67):
         self.pie_grid.Clear(True)
-        img_name = "KYS.png" if is_67 else "pie.png"
+        img_name = "KYS.png" if is_67 else "pie T^T.png"
         img_path = os.path.join("..", "peripherals", img_name)
+        
         if os.path.exists(img_path):
-            full_img = Image.open(img_path).convert("RGBA")
+            full_img = Image.open(img_path).convert("RGBA").resize((80, 80), Image.Resampling.LANCZOS)
             integer_part = int(abs(val))
             decimal_part = abs(val) - integer_part
+            
             for _ in range(min(integer_part, 200)):
-                scaled = full_img.resize((80, 80), Image.Resampling.LANCZOS)
-                bmp = wx.Bitmap.FromBufferRGBA(80, 80, scaled.tobytes())
+                bmp = wx.Bitmap.FromBufferRGBA(80, 80, full_img.tobytes())
                 self.pie_grid.Add(wx.StaticBitmap(self.visual_scroller, -1, bmp), 0, wx.ALL, 2)
+            
             if decimal_part > 0.01:
-                d_size = int(80 * decimal_part)
-                scaled_d = full_img.resize((d_size, d_size), Image.Resampling.LANCZOS)
-                bmp_d = wx.Bitmap.FromBufferRGBA(d_size, d_size, scaled_d.tobytes())
+                crop_width = max(1, int(80 * decimal_part))
+                cropped_img = full_img.crop((0, 0, crop_width, 80))
+                
+                bmp_d = wx.Bitmap.FromBufferRGBA(crop_width, 80, cropped_img.tobytes())
                 self.pie_grid.Add(wx.StaticBitmap(self.visual_scroller, -1, bmp_d), 0, wx.ALL, 2)
-        self.visual_scroller.Layout(); self.visual_scroller.SetupScrolling()
+                
+        self.visual_scroller.Layout()
+        self.visual_scroller.SetupScrolling()
 
     def on_toggle_mode(self, e):
         self.is_degrees = not self.is_degrees
