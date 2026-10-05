@@ -182,7 +182,7 @@ class SophisticatedPieCalc(wx.Frame):
 
     def draw_pies(self, val, is_67):
         self.pie_grid.Clear(True)
-        img_name = "KYS.png" if is_67 else "pie T^T.png"
+        img_name = "KYS.png" if is_67 else "pie.png"
         img_path = os.path.join("..", "peripherals", img_name)
         
         if os.path.exists(img_path):
